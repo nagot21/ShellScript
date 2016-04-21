@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#teste="df -h | grep -i sda | cut -f 3 -d / | wc -l"
+#echo $(df -h | grep -i sda | cut -f 3 -d / | wc -l)
+
+for i in $(seq 1 $(df -h | grep -i sda | cut -f 3 -d "/" | wc -l))
+do
+	df -h | grep -i sda | cut -f 3 -d "/" | cut -f 1 -d " " | sed -n ''$i'p'
+#	echo "teste$[i]"
+done

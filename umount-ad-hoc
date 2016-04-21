@@ -1,0 +1,16 @@
+#!/bin/bash
+
+####### Umount Ad-Hoc Network #######
+
+# Made by Ian Nagot 08/04/2011
+
+# Bring down wlan0 and change to Managed mode.
+
+ifconfig wlan0 down
+iwconfig wlan0 mode Managed
+
+# Bring up Network Manager
+
+service network-manager start
+
+exit 0

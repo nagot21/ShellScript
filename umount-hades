@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# This script umount and delete de previous directories created by "mount-hades".
+
+TORR='/home/nagot/Desktop/.Torrents'
+#TORRFILMES='/home/nagot/Desktop/.Torrents Filmes'
+
+umount.cifs $TORR
+umount.cifs '/home/nagot/Desktop/.Torrents Filmes'
+umount '/home/nagot/Desktop/.Documentos Compartilhados'
+
+if [ -d '/home/nagot/Desktop/.Torrents' ] && [ -d '/home/nagot/Desktop/.Torrents Filmes' ] && [ -d '/home/nagot/Desktop/.Documentos Compartilhados' ]; then
+
+	rmdir $TORR
+	rmdir '/home/nagot/Desktop/.Torrents Filmes'
+	rmdir '/home/nagot/Desktop/.Documentos Compartilhados'
+
+else
+
+	echo "Diretórios não encontrados..."
+
+fi

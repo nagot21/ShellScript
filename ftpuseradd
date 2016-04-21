@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# BOF
+
+# Beggin of Variable area
+
+PASSWD=$(pwgen -cn | cut -d " " -f 1)
+GROUP="ftpusers"
+SHELL="/usr/sbin/nologin"
+HOME="/home/torrents"
+ALLOW="/etc/vsftpd.allowed_users"
+LOG="/tmp/ftpuseradd.log"
+TEST=$(cat $ALLOW | grep -i $1)
+MAIL="lonegunman21@gmail.com"
+
+# End of Variable area
+
+# Beggin of Command area
+
+if [ "$TEST" = "$1" ]; then
+	echo "Usuario ja cadastrado no sistema!"
+else
+	useradd $1 -g $GROUP -s $SHELL -d $HOME -p `mkpasswd $PASSWD`
+	echo "$1" >> $ALLOW
+	echo -e "To: $2" > $LOG
+	echo -e "Subject: Bem vindo ao FTP Lonegunman21" >> $LOG
+	echo -e "" >> $LOG
+	echo -e "Caro(a) $1, sua conta no ftp foi criada com sucesso. Para acessa-lo, basta seguir o procedimento abaixo:\n" >> $LOG
+	echo -e "Abra uma pagina do chrome ou firefox (EXCETO INTERNET EXPLORER) e coloque o link abaixo seguido de usuario e senha:\n" >> $LOG
+	echo -e "ftp://nagot.no-ip.org:2121\n" >> $LOG
+	echo -e "USER: $1" >> $LOG
+	echo -e "SENHA: $PASSWD\n" >> $LOG
+	echo -e "OBS: Recomendo fortemente a utilizacao do programa Filezilla Client. Para baixa-lo, e so clicar no link: http://filezilla-project.org/\n" >> $LOG
+	echo -e "### Esta e uma mensagem gerada automaticamente, qualquer duvida entrar em contato com nagott@gmail.com ###" >> $LOG
+	ssmtp $2 -au$MAIL < $LOG
+	sed -i 's/'$2'/nagott@gmail.com/g' $LOG
+	ssmtp nagott@gmail.com -au$MAIL < $LOG
+	rm $LOG
+fi
+
+# End of Command area
+
+# EOF

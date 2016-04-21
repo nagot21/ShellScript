@@ -1,0 +1,24 @@
+#!/bin/bash
+
+####### Ad-Hoc Network Manager #######
+
+# Made by Ian Nagot 08/04/2011
+
+# Stop Network Manager and bring down wlan0.
+
+ service network-manager stop
+`ifconfig wlan0 down` 
+
+# Set an static IP to wlan0 and start the Ad-Hoc configuration.
+
+`iwconfig wlan0 mode Ad-Hoc`
+`iwconfig wlan0 channel 4`
+`iwconfig wlan0 essid 'nagot21'`
+`iwconfig wlan0 key 019ba6da21`
+`ifconfig wlan0 192.168.21.254 netmask 255.255.255.0`
+
+# Bring up wlan0
+
+`ifconfig wlan0 up`
+
+exit 0

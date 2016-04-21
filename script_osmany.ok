@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# BOF
+
+### Begining of Variable Area ###
+
+DIR_DEST="/home/nagot/Desktop/n2_osmany"
+NICE="nice -n -20"
+DEVICE=$1
+
+### End of Variable Area ###
+
+### Begining of Command area ###
+
+copy_dev() {
+
+echo -e "\nFazendo copia do dispositivo $DEVICE...\n"
+$NICE dcfldd if=/dev/$DEVICE of=$DIR_DEST/pendrive_img_n2.img hash=md5,sha1 hashlog=$DIR_DEST/pendrive_img_n2.hash
+echo -e "\nCopia da Imagem concluida. Tirando md5 do dispositivo localizado em /dev/$DEVICE..."
+$NICE md5sum /dev/$DEVICE > $DIR_DEST/pendrive_dev_n2.hash
+echo -e "\nmd5 concluido. Tirando sha1 do dispositivo localizado em /dev/$DEVICE..."
+$NICE sha1sum /dev/$DEVICE >> $DIR_DEST/pendrive_dev_n2.hash
+chown nagot:nagot $DIR_DEST/*
+
+}
+
+copy_dev
+
+VAR1=$(head -n 1 $DIR_DEST/pendrive_img_n2.hash | cut -d " " -f 3)
+VAR2=$(head -n 1 $DIR_DEST/pendrive_dev_n2.hash | cut -d " " -f 1)
+VAR3=$(tail -n 1 $DIR_DEST/pendrive_img_n2.hash | cut -d " " -f 3)
+VAR4=$(tail -n 1 $DIR_DEST/pendrive_dev_n2.hash | cut -d " " -f 1)
+
+if [ $VAR1 != $VAR2 ] | [ $VAR3 != $VAR4 ]; then
+	echo -e "\nHash md5 tirado pelo dcfldd $VAR1"
+	echo -e "\nHash sha1 tirado pelo dcfldd $VAR3"
+	echo -e "\nHash md5 tirado pelo md5sum $VAR2"
+	echo -e "\nHash sha1 tirado pelo sha1sum $VAR4"
+	echo -e "\nOs hashs tirados pelo dcfldd e md5sum e sha1sum nao batem. REFAZENDO O PROCEDIMENTO!"
+	$NICE rm -rf $DIR_DEST/*
+	copy_dev
+else
+	echo -e "\nHash md5 tirado pelo dcfldd $VAR1"
+	echo -e "\nHash md5 tirado pelo md5sum $VAR2"
+	echo -e "\nHash sha1 tirado pelo dcfldd $VAR3"
+	echo -e "\nHash sha1 tirado pelo sha1sum $VAR4"
+	echo -e "\nCopia efetuada com sucesso. FAZENDO A COPIA DA IMAGEM ORIGINAL!\n"
+	$NICE cp -av $DIR_DEST/pendrive_img_n2.img $DIR_DEST/img_for_work_osmany_pen_n2.img
+	echo -e "\nPrograma executado com sucesso!\n"
+fi
+
+
+### End of Command area ###
+
+# EOF

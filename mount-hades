@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# This script mounts automatically the smb mapping for my personal desktop Hades throught the command "mount-hades".
+
+MKDIR=`mkdir '/home/nagot/Desktop/.Torrents' '/home/nagot/Desktop/.Torrents Filmes' '/home/nagot/Desktop/.Documentos Compartilhados'`
+DIR='/home/nagot/Desktop/.Torrents' '/home/nagot/Desktop/.Torrents Filmes' '/home/nagot/Desktop/.Documentos Compartilhados'
+TORRENT1=`mount -t smbfs '//192.168.0.1/Torrents/' '/home/nagot/Desktop/.Torrents' -o password=21pexemocu06`
+TORRENT2=`mount -t smbfs '//192.168.0.1/Torrens 2/Filmes' '/home/nagot/Desktop/.Torrents Filmes' -o password=21pexemocu06`
+DOCS= `mount -t smbfs '//192.168.0.1/Documentos compartilhados' '/home/nagot/Desktop/.Documentos Compartilhados' -o password=21pexemocu06`
+
+if [ -d '/home/nagot/Desktop/.Torrents' ] && [ -d '/home/nagot/Desktop/.Torrents Filmes' ] && [ -d '/home/nagot/Desktop/.Documentos Compartilhados' ]; then
+	$TORRENT1
+	$TORRENT2
+	$DOCS
+else
+	$MKDIR	
+	chmod 777 $DIR
+	$TORRENT1
+	$TORRENT2
+	$DOCS
+fi

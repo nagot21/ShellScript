@@ -1,0 +1,34 @@
+#!/bin/bash
+
+####### Ad-Hoc Network Manager #######
+
+# Made by Ian Nagot 08/04/2011
+
+# V 1.1
+
+# Improved script to search for the wlan connection on any computer.
+
+# Stop Network Manager and bring down wlan0.
+
+ service network-manager stop
+
+# Search for the first free wireless connection.
+
+ iwconfig > /tmp/iwc
+ WLAN=`cat /tmp/iwc | grep -i essid:off | cut -d ' ' -f 1`
+
+`ifconfig $WLAN down` 
+
+# Set an static IP to wlan0 and start the Ad-Hoc configuration.
+
+`iwconfig $WLAN mode Ad-Hoc`
+`iwconfig $WLAN channel 4`
+`iwconfig $WLAN essid 'nagot21'`
+`iwconfig $WLAN key 019ba6da21`
+`ifconfig $WLAN 192.168.21.254 netmask 255.255.255.0`
+
+# Bring up wlan0
+
+`ifconfig $WLAN up`
+
+exit 0
